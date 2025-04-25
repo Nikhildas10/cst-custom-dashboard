@@ -7,23 +7,35 @@
     "dev": "tsx --watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
+    "drizzle-orm": "^0.42.0",
+    "drizzle-zod": "^0.7.1",
     "express": "^5.1.0",
-    "morgan": "^1.10.0"
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "pg": "^8.15.5",
+    "zod": "^3.24.3"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.1",
+    "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.14.0",
+    "@types/pg": "^8.11.14",
+    "drizzle-kit": "^0.31.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3"
   }
