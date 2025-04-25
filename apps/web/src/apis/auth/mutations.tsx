@@ -2,10 +2,11 @@ import { apiClient } from "@/lib/axios";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useAuthStore } from "@/store/auth";
 
 export function useLogin() {
   const router = useRouter();
-  //   const { setAccessToken } = useAuthStore();
+  const setAuth = useAuthStore((state) => state.setAuth);
 
   return useMutation({
     mutationFn: async ({
@@ -20,11 +21,8 @@ export function useLogin() {
           email,
           password,
         });
-        console.log(response);
-        const accessToken = response?.data?.data?.accessToken;
-
-        localStorage.setItem("access-token", accessToken);
-
+        const { accessToken, name: username } = response?.data?.data;
+        setAuth(accessToken, username);
         return response.data;
       } catch (error) {
         console.log("err", error);

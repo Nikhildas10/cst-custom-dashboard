@@ -1,6 +1,7 @@
 import axios from "axios";
+import { useAuthStore } from "@/store/auth";
 
-export const AGENT_API = 'http://localhost:8000/api/v1/';
+export const AGENT_API = "http://localhost:8000/api/v1/";
 
 const apiClient = axios.create({
   baseURL: AGENT_API,
@@ -8,17 +9,15 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   (config) => {
-    console.log("Request Config:", config);
     if (
       !config?.url?.includes("/login") &&
       !config?.url?.includes("/register")
     ) {
-      const token = localStorage.getItem("access-token");
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+      const accessToken = useAuthStore.getState().accessToken;
+      if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
       }
     }
-    console.log(config);
     return config;
   },
   (error: unknown) => Promise.reject(error)
