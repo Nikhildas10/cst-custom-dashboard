@@ -28,13 +28,13 @@ export const isAutheticated = async (
   next: NextFunction
 ) => {
   try {
-    const authHeader = req.headers.authorization;
+    const authHeader = req.headers["Authorization"];
 
     if (!authHeader) {
       throw new ErrorHandler(401, "No authorization token found");
     }
 
-    const token = authHeader.split(" ")[1];
+    const token = Array.isArray(authHeader) ? authHeader[0].split(" ")[1] : authHeader.split(" ")[1];
 
     const decoded = jwt.verify(
       token,
@@ -69,3 +69,4 @@ export const isAutheticated = async (
     next(error);
   }
 };
+
