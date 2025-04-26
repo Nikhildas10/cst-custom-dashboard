@@ -52,7 +52,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function TotalUser() {
+export function TotalVistors() {
   const totalVisitors = React.useMemo(() => {
     return chartData.reduce((acc, curr) => acc + curr.visitors, 0);
   }, []);
@@ -60,7 +60,7 @@ export function TotalUser() {
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Pie Chart - Donut with Text</CardTitle>
+        <CardTitle>Total visitors</CardTitle>
         <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">

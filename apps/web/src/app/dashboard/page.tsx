@@ -1,58 +1,86 @@
 "use client";
 
-import { useState } from "react";
-import { BarChart, LineChart, PieChart } from "lucide-react";
-
+import { useGetWidgetPreferences } from "@/apis/widget/queries";
+import { useUpdateWidgetPreferences } from "@/apis/widget/mutations";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { authProtected } from "@/components/withAuth";
 import { DashboardHeader } from "@/components/dashboardHeader";
-// import { Separator } from "@/components/ui/separator";
+import { SalesWidget } from "@/components/widgets/sales-widget";
+import { VisitorsWidget } from "@/components/widgets/visitors-widget";
+import { RevenueWidget } from "@/components/widgets/revenue-widget";
+import { ActivityWidget } from "@/components/widgets/activity-widget";
+import { StatisticsWidget } from "@/components/widgets/statistics-widget";
+import { TotalVistors } from "@/components/widgets/totalVisitors";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
-// import { DashboardHeader } from "@/components/dashboard-header";
-// import { SalesWidget } from "@/components/sales-widget";
-// import { VisitorsWidget } from "@/components/visitors-widget";
-// import { RevenueWidget } from "@/components/revenue-widget";
-// import { ConversionWidget } from "@/components/conversion-widget";
-// import { TopProductsWidget } from "@/components/top-products-widget";
-// import { SummaryWidget } from "@/components/summary-widget";
+interface WidgetPreference {
+  widgetName: string;
+  isVisible: boolean;
+}
 
-export default function DashboardPage() {
-  // Define all available widgets with their initial visibility state
-  const [widgetVisibility, setWidgetVisibility] = useState({
-    sales: true,
-    visitors: true,
-    revenue: true,
-    conversion: true,
-    topProducts: true,
-    summary: true,
-  });
+function DashboardPage() {
+  const { data: widgetPreferences, isLoading } = useGetWidgetPreferences();
+  const { mutate: updatePreferences, isPending } = useUpdateWidgetPreferences();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [tempPreferences, setTempPreferences] = useState<WidgetPreference[]>([]);
 
-  // Temporary state for the dialog
-  const [tempWidgetVisibility, setTempWidgetVisibility] = useState({
-    ...widgetVisibility,
-  });
-
-  // Handle dialog open
   const handleDialogOpen = (open: boolean) => {
-    if (open) {
-      // Reset temporary state when opening
-      setTempWidgetVisibility({ ...widgetVisibility });
+    if (open && widgetPreferences) {
+      setTempPreferences([...widgetPreferences]);
     }
+    setIsDialogOpen(open);
   };
 
-  // Apply changes from the dialog
-  const applyChanges = () => {
-    setWidgetVisibility({ ...tempWidgetVisibility });
+  if (isLoading) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="mx-auto h-8 w-8 animate-spin" />
+          <p className="mt-2">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const isWidgetVisible = (widgetName: string) => {
+    return widgetPreferences?.find(pref => pref.widgetName === widgetName)?.isVisible ?? false;
+  };
+
+  const widgetLabels = {
+    statistics: "Statistics Overview",
+    visitors: "Visitors Analytics",
+    analytics: "Analytics",
+    sales: "Sales Statistics",
+    revenue: "Revenue Metrics",
+    activity: "Recent Activity",
+  };
+
+  const handleTempPreferenceChange = (widgetName: string, checked: boolean) => {
+    setTempPreferences(current =>
+      current.map(pref =>
+        pref.widgetName === widgetName
+          ? { ...pref, isVisible: checked }
+          : pref
+      )
+    );
+  };
+
+  const handleApplyChanges = () => {
+    updatePreferences(tempPreferences, {
+      onSuccess: () => setIsDialogOpen(false)
+    });
   };
 
   return (
@@ -60,7 +88,8 @@ export default function DashboardPage() {
       <DashboardHeader />
       <main className="flex-1 space-y-4 p-8 pt-6">
         <div className="flex items-center justify-between">
-          <Dialog onOpenChange={handleDialogOpen}>
+          <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+          <Dialog open={isDialogOpen} onOpenChange={handleDialogOpen}>
             <DialogTrigger asChild>
               <Button variant="outline">Configure Widgets</Button>
             </DialogTrigger>
@@ -72,124 +101,44 @@ export default function DashboardPage() {
                 </DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="sales"
-                    checked={tempWidgetVisibility.sales}
-                    onCheckedChange={(checked) =>
-                      setTempWidgetVisibility({
-                        ...tempWidgetVisibility,
-                        sales: !!checked,
-                      })
-                    }
-                  />
-                  <Label htmlFor="sales" className="flex items-center gap-2">
-                    <LineChart className="h-4 w-4" />
-                    Sales Chart
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="visitors"
-                    checked={tempWidgetVisibility.visitors}
-                    onCheckedChange={(checked) =>
-                      setTempWidgetVisibility({
-                        ...tempWidgetVisibility,
-                        visitors: !!checked,
-                      })
-                    }
-                  />
-                  <Label htmlFor="visitors" className="flex items-center gap-2">
-                    <BarChart className="h-4 w-4" />
-                    Visitors Chart
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="revenue"
-                    checked={tempWidgetVisibility.revenue}
-                    onCheckedChange={(checked) =>
-                      setTempWidgetVisibility({
-                        ...tempWidgetVisibility,
-                        revenue: !!checked,
-                      })
-                    }
-                  />
-                  <Label htmlFor="revenue" className="flex items-center gap-2">
-                    <LineChart className="h-4 w-4" />
-                    Revenue Chart
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="conversion"
-                    checked={tempWidgetVisibility.conversion}
-                    onCheckedChange={(checked) =>
-                      setTempWidgetVisibility({
-                        ...tempWidgetVisibility,
-                        conversion: !!checked,
-                      })
-                    }
-                  />
-                  <Label
-                    htmlFor="conversion"
-                    className="flex items-center gap-2"
-                  >
-                    <PieChart className="h-4 w-4" />
-                    Conversion Rate
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="topProducts"
-                    checked={tempWidgetVisibility.topProducts}
-                    onCheckedChange={(checked) =>
-                      setTempWidgetVisibility({
-                        ...tempWidgetVisibility,
-                        topProducts: !!checked,
-                      })
-                    }
-                  />
-                  <Label htmlFor="topProducts">Top Products Table</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="summary"
-                    checked={tempWidgetVisibility.summary}
-                    onCheckedChange={(checked) =>
-                      setTempWidgetVisibility({
-                        ...tempWidgetVisibility,
-                        summary: !!checked,
-                      })
-                    }
-                  />
-                  <Label htmlFor="summary">Summary Stats</Label>
-                </div>
+                {tempPreferences.map((pref) => (
+                  <div key={pref.widgetName} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={pref.widgetName}
+                      checked={pref.isVisible}
+                      disabled={isPending}
+                      onCheckedChange={(checked) => {
+                        handleTempPreferenceChange(pref.widgetName, checked as boolean);
+                      }}
+                    />
+                    <Label htmlFor={pref.widgetName}>
+                      {widgetLabels[pref.widgetName as keyof typeof widgetLabels]}
+                    </Label>
+                  </div>
+                ))}
               </div>
               <DialogFooter>
-                <Button onClick={applyChanges}>Apply Changes</Button>
+                <Button
+                  onClick={handleApplyChanges}
+                  disabled={isPending}
+                >
+                  {isPending ? "Applying changes..." : "Apply Changes"}
+                </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
         </div>
-        {/* <Separator />
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {widgetVisibility.summary && <SummaryWidget />}
-          {widgetVisibility.conversion && <ConversionWidget />}
+          {isWidgetVisible('statistics') && <StatisticsWidget />}
+          {isWidgetVisible('visitors') && <TotalVistors />}
+          {isWidgetVisible('analytics') && <VisitorsWidget />}
+          {isWidgetVisible('sales') && <SalesWidget />}
+          {isWidgetVisible('revenue') && <RevenueWidget />}
+          {isWidgetVisible('activity') && <ActivityWidget />}
         </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {widgetVisibility.sales && <SalesWidget className="lg:col-span-2" />}
-          {widgetVisibility.visitors && <VisitorsWidget />}
-        </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {widgetVisibility.revenue && (
-            <RevenueWidget className="lg:col-span-2" />
-          )}
-          {widgetVisibility.topProducts && (
-            <TopProductsWidget className="md:col-span-2 lg:col-span-1" />
-          )} */}
-        {/* </div> */}
       </main>
     </div>
   );
 }
+
+export default authProtected(DashboardPage);

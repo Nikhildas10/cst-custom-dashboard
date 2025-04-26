@@ -1,13 +1,27 @@
-import { RegisterForm } from "@/components/forms/registerForm";
+'use client'
+
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { useAuthStore } from "@/store/auth"
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from "@/components/ui/card";
+} from "@/components/ui/card"
+import { RegisterForm } from "@/components/forms/registerForm"
 
 export default function RegisterPage() {
+  const router = useRouter()
+  const accessToken = useAuthStore((state) => state.accessToken)
+
+  useEffect(() => {
+    if (accessToken) {
+      router.replace('/dashboard')
+    }
+  }, [accessToken, router])
+
   return (
     <div className="container flex h-screen w-full flex-col items-center justify-center">
       <Card className="mx-auto w-full max-w-sm">
@@ -27,11 +41,11 @@ export default function RegisterPage() {
               href="/login"
               className="underline underline-offset-4 hover:text-primary"
             >
-              Login
+              Sign in
             </a>
           </div>
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }

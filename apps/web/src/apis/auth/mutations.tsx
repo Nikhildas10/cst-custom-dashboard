@@ -16,18 +16,13 @@ export function useLogin() {
       email: string;
       password: string;
     }) => {
-      try {
-        const response = await apiClient.post("user/auth/login", {
-          email,
-          password,
-        });
-        const { accessToken, name: username } = response?.data?.data;
-        setAuth(accessToken, username);
-        return response.data;
-      } catch (error) {
-        console.log("err", error);
-        throw error;
-      }
+      const response = await apiClient.post("user/auth/login", {
+        email,
+        password,
+      });
+      const { accessToken, name: username } = response?.data?.data;
+      setAuth(accessToken, username);
+      return response.data;
     },
     onSuccess: () => {
       toast.success("Login successful");
@@ -51,17 +46,12 @@ export function useRegister() {
       email: string;
       password: string;
     }) => {
-      try {
-        const response = await apiClient.post("user/auth/register", {
-          name,
-          email,
-          password,
-        });
-        return response.data;
-      } catch (error) {
-        console.log("err", error);
-        throw error;
-      }
+      const response = await apiClient.post("user/auth/register", {
+        name,
+        email,
+        password,
+      });
+      return response.data;
     },
     onSuccess: () => {
       toast.success("Registration successful");

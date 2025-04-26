@@ -351,3 +351,21 @@ export {
   ChartLegendContent,
   ChartStyle,
 }
+
+export {
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  Cell,
+  Legend,
+  Line,
+  LineChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+} from "recharts";

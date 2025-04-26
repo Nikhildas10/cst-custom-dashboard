@@ -47,7 +47,6 @@ class AuthService {
       name: user.name,
       email: user.email,
       accessToken,
-      createdAt: user.createdAt,
     };
   }
 }

@@ -1,13 +1,27 @@
-import { LoginForm } from "@/components/forms/loginForm";
+'use client'
+
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { useAuthStore } from "@/store/auth"
+import { LoginForm } from "@/components/forms/loginForm"
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from "@/components/ui/card";
+} from "@/components/ui/card"
 
 export default function LoginPage() {
+  const router = useRouter()
+  const accessToken = useAuthStore((state) => state.accessToken)
+
+  useEffect(() => {
+    if (accessToken) {
+      router.replace('/dashboard')
+    }
+  }, [accessToken, router])
+
   return (
     <div className="container flex h-screen w-full flex-col items-center justify-center">
       <Card className="mx-auto w-full max-w-sm">
@@ -33,5 +47,5 @@ export default function LoginPage() {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }
