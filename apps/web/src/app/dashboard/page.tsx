@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { authProtected } from "@/components/withAuth";
+import { authProtected } from "@/components/authProtected";
 import { DashboardHeader } from "@/components/dashboardHeader";
 import { SalesWidget } from "@/components/widgets/sales-widget";
 import { VisitorsWidget } from "@/components/widgets/visitors-widget";

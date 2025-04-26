@@ -1,84 +1,80 @@
-# Turborepo starter
+# CST - Custom Dashboard
 
-This Turborepo starter is maintained by the Turborepo core team.
+A modern full-stack monorepo built with Turborepo, featuring Next.js for the frontend and Express.js for the backend.
 
-## Using this example
+## Prerequisites
 
-Run the following command:
+- Node.js (version >= 18)
+- [pnpm] (version 9.0.0)
 
-```sh
-npx create-turbo@latest
-```
+## Getting Started
 
-## What's inside?
+1. Clone the repository:
+git clone <repository-url>
+cd cst
 
-This Turborepo includes the following packages/apps:
+2. Install dependencies:
+pnpm install
 
-### Apps and Packages
+3. Set up environment variables:
+   - Copy `.env.example` to `.env` in `apps/server` directories
+   - Update the variables as needed
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+4. Start the project:
+turbo dev
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+This will start:
+- Frontend (Next.js): [http://localhost:3000]
+- Backend (Express): [http://localhost:8000]
 
-### Utilities
+## Available Scripts
 
-This Turborepo has some additional tools already setup for you:
+- `turbo dev` - Start all applications in development mode
+- `turbo build` - Build all applications and packages
+- `turbo lint` - Run ESLint across all projects
+- `turbo format` - Format all files with Prettier
+- `turbo check-types` - Run TypeScript type checking across all projects
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+### Backend-specific Commands
 
-### Build
+cd apps/server
+pnpm db:generate  # Generate Drizzle migrations
+pnpm db:migrate   # Run database migrations
 
-To build all apps and packages, run the following command:
+## Tech Stack
 
-```
-cd my-turborepo
-pnpm build
-```
+### Frontend (apps/web)
+- Next.js 15
+- React 19
+- TanStack Query
+- Shadcn UI
+- Tailwind CSS
+- Zustand
+- React Hook Form
+- Zod
 
-### Develop
+### Backend (apps/server)
+- Express.js
+- TypeScript
+- Drizzle ORM
+- PostgreSQL
+- JWT Authentication
+- Zod Validation
 
-To develop all apps and packages, run the following command:
+### Development Tools
+- Turborepo
+- TypeScript
+- ESLint
+- Prettier
+- pnpm Workspaces
 
-```
-cd my-turborepo
-pnpm dev
-```
+## Contributing
 
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turbo.build/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/docs/reference/command-line-reference)
+1. Create a new branch: `git checkout -b feature/your-feature-name`
+2. Make your changes
+3. Run tests and checks:
+   pnpm lint
+   pnpm check-types
+4. Commit your changes
+5. Push to your branch
+6. Create a Pull Request
