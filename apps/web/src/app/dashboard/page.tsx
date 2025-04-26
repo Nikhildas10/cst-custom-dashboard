@@ -59,11 +59,11 @@ function DashboardPage() {
   };
 
   const widgetLabels = {
-    statistics: "Statistics Overview",
-    visitors: "Visitors Analytics",
+    statistics: "Statistics",
+    visitors: "Total Visitors ",
     analytics: "Analytics",
     sales: "Sales Statistics",
-    revenue: "Revenue Metrics",
+    revenue: "Revenue",
     activity: "Recent Activity",
   };
 
@@ -88,7 +88,7 @@ function DashboardPage() {
       <DashboardHeader />
       <main className="flex-1 space-y-4 p-8 pt-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+          <h2 className="text-3xl font-bold tracking-tight"></h2>
           <Dialog open={isDialogOpen} onOpenChange={handleDialogOpen}>
             <DialogTrigger asChild>
               <Button variant="outline">Configure Widgets</Button>
@@ -118,6 +118,13 @@ function DashboardPage() {
                 ))}
               </div>
               <DialogFooter>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsDialogOpen(false)}
+                >
+                  Cancel
+                </Button>
                 <Button
                   onClick={handleApplyChanges}
                   disabled={isPending}
