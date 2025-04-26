@@ -7,13 +7,47 @@ import { eq } from "drizzle-orm";
 import credentials from "../../config/credentials";
 import jwt from "jsonwebtoken";
 
+const DEFAULT_WIDGET_PREFERENCES = [
+  {
+    widgetName: "statistics",
+    isVisible: true
+  },
+  {
+    widgetName: "visitors",
+    isVisible: true
+  },
+  {
+    widgetName: "analytics",
+    isVisible: true
+  },
+  {
+    widgetName: "sales",
+    isVisible: true
+  },
+  {
+    widgetName: "revenue",
+    isVisible: true
+  },
+  {
+    widgetName: "activity",
+    isVisible: true
+  }
+];
+
 class AuthService {
    register=async(data: IRegisterInput)=> {
     const { name, email, password } = data;
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await db
       .insert(usersTable)
-      .values({ name, email, password: hashedPassword })
+      .values({ 
+        name, 
+        email, 
+        password: hashedPassword,
+        widgetPreferences: DEFAULT_WIDGET_PREFERENCES,
+        createdAt: Math.floor(Date.now() / 1000),
+        updatedAt: Math.floor(Date.now() / 1000)
+      })
       .returning();
     return user;
   }
