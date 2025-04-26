@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useAuthStore } from "@/store/auth";
 
-export const AGENT_API = "http://localhost:8000/api/v1/";
+export const AGENT_API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1/";
 
 const apiClient = axios.create({
   baseURL: AGENT_API,
